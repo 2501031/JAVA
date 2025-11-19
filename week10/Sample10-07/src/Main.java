@@ -4,33 +4,31 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     public static void main(String[] args) throws IOException {
         Scanner keyboard = new Scanner(System.in);
-        String[] hakbun = {"2501002", "2501004", "2501012", "2501022", "2501032",
-                "2501042", "2501054", "2501062", "2501072", "2501082"};
-        String[] name = {"홍길동", "이재명", "윤석열", "경복대", "오세훈",
-                "강민성", "김시온", "이진우", "한장우", "니키타"};
-        int[] kor = new int[name.length];
-        int[] eng = new int[name.length];
-        int math[] = new int[name.length];
 
-        int[] sum = new int[name.length];
-        float[] avg = new float[name.length];
-        int[] rank = new int[name.length];
+        String[][] students = {{"2501002","홍길동"}, {"2501004","이재명"}, {"2501012","윤석열"},
+                {"2501022","경복대"},{"2501032","오세훈"}, {"2501042","강민성"},
+                {"2501054","김시온"},{"2501062","이진우"},{"2501072","한장우"},{"2501082","니키타"}};
+
+        int[][] score = new int[students.length][5]; // {국어, 영어, 수학, 총점, 등수}
+        float[] avg = new float[students.length];
+
         boolean swapped = false;
 
         int i = 0;
-        while (i < kor.length) {
-            System.out.printf("%s님의 국어 성적 입력 : ", name[i]);
-            kor[i] = keyboard.nextInt();
-            System.out.printf("%s님의 영어 성적 입력 : ", name[i]);
-            eng[i] = keyboard.nextInt();
-            System.out.printf("%s님의 수학 성적 입력 : ", name[i]);
-            math[i] = keyboard.nextInt();
+        while (i < students.length) {
+            System.out.printf("%s님의 국어 성적 입력 : ", students[i][1]);
+            score[i][0] = keyboard.nextInt();
+            System.out.printf("%s님의 영어 성적 입력 : ", students[i][1]);
+            score[i][1] = keyboard.nextInt();
+            System.out.printf("%s님의 수학 성적 입력 : ", students[i][1]);
+            score[i][2] = keyboard.nextInt();
 
-            if ((kor[i] >= 0 && kor[i] <= 100) &&
-                    (eng[i] >= 0 && eng[i] <= 100) &&
-                    (math[i] >= 0 && math[i] <= 100)) {
+            if ((score[i][0] >= 0 && score[i][0] <= 100) &&
+                    (score[i][1] >= 0 && score[i][1] <= 100) &&
+                    (score[i][2] >= 0 && score[i][2] <= 100)) {
                 i++;
             } else {
                 System.err.println("ERROR : 0 ~ 100");
@@ -39,8 +37,9 @@ public class Main {
             System.out.println();
         }
 
-        for (i = 0; i < kor.length; i++) {
-            sum[i] = kor[i] + eng[i] + math[i];
+        for (i = 0; i < students.length; i++) {
+            for (int j = 0; j < score[i].length - 2; j++)
+                score[i][score[i].length - 2] += score[i][j];
         }
 
      /*   for (i = 0; i < name.length - 1; i++) {
@@ -81,14 +80,14 @@ public class Main {
             if (!swapped) break;
         } */
 
-        for (i = 0; i < kor.length; i++)
-            avg[i] = sum[i] / 3.0f;
+        for (i = 0; i < students.length; i++)
+            avg[i] = score[i][score[i].length - 2] / 3.0f;
 
-        for (i = 0; i < sum.length; i++) {
-            rank[i] = 1;
-            for (int j = 0; j < sum.length; j++) {
-                if (sum[i] < sum[j])
-                    ++rank[i];
+        for (i = 0; i < students.length; i++) {
+            score[i][score[i].length - 1] = 1;
+            for (int j = 0; j < students.length; j++) {
+                if (score[i][score[i].length - 2] < score[j][score[j].length - 2])
+                    ++score[i][score[i].length - 1];
             }
         }
 
@@ -157,9 +156,10 @@ public class Main {
         System.out.println("****************************************");
         System.out.println(" 학번  이름  국어  영어  수학  총점 평균  등수");
         System.out.println("****************************************");
-        for (i = 0; i < name.length; i++) {
+        for (i = 0; i < students.length; i++) {
             System.out.printf("%7s %3s %3d %3d %3d %3d %5.1f %2d\n",
-                    hakbun[i], name[i], kor[i], eng[i], math[i], sum[i], avg[i], rank[i]);
+                    students[i][0], students[i][1], score[i][0], score[i][1], score[i][2],
+                    score[i][3], avg[i], score[i][4]);
         }
         System.out.println("****************************************");
     }
